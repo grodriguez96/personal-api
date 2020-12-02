@@ -1,5 +1,6 @@
 import express from 'express'
 import cors from 'cors'
+import bodyParser from 'body-parser'
 
 import transactionRoute from '../src/routes/transaction.js';
 
@@ -7,6 +8,8 @@ import transactionRoute from '../src/routes/transaction.js';
 const app = express();
 app.use(cors());
 app.options('*', cors());
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
 /** Settings */
 app.set('port', process.env.PORT || 4000);
