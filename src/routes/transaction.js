@@ -73,4 +73,17 @@ router.put('/:id', async (req, res) => {
     }
 })
 
+router.delete('/:id', async (req, res) => {
+
+    try {
+
+        const { id } = req.params;
+        await transactionDao.delet(id)
+        res.status(201).send({ id: id })
+
+    } catch (err) {
+        console.log(err)
+    }
+})
+
 export default router;

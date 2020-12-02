@@ -16,3 +16,7 @@ export async function update(nTran, id) {
     await pool.query('UPDATE transaction set ? WHERE id = ?', [nTran, id]);
     return { ...nTran, id }
 }
+
+export async function delet(id) {
+    await pool.query('DELETE FROM transaction WHERE id = ?', [id]);
+}
