@@ -7,7 +7,7 @@ var router = express.Router();
 router.get('/:id', async (req, res) => {
 
     const { id } = req.params;
-    res.send(await transactionDao.getAllTransactions(id))
+    res.send(await transactionDao.getAll(id))
 })
 
 /** Create one or multiples data */
@@ -16,7 +16,7 @@ router.post('/', async (req, res) => {
     /** Insert transaction in the DB */
     const createTransact = (transact) => {
         const newTransact = convert(transact);
-        return transactionDao.postTransaction(newTransact)
+        return transactionDao.post(newTransact)
     }
 
     /** Modify values */
@@ -33,9 +33,39 @@ router.post('/', async (req, res) => {
     }
 
     try {
-        /** When using map i will have an array of promises, which when they are fulfilled will return the inserted pies */
         const insertedTransaction = await createTransact(req.body);
-        const gTransaction = transactionDao.getTransaction(insertedTransaction.id)
+        const gTransaction = transactionDao.get(insertedTransaction.id)
+        res.status(201).send({ transaction: await gTransaction })
+
+    } catch (err) {
+        console.log(err)
+    }
+})
+
+/** Edit data of one transaction */
+router.put('/:id', async (req, res) => {
+
+    /** Insert transaction in the DB */
+    const updateTransact = (transact) => {
+        const { id } = req.params;
+        const newTransact = convert(transact);
+        return transactionDao.update(newTransact, id)
+    }
+
+    /** Modify values */
+    const convert = (transact) => {
+        const { concept, amount, transaction_date } = transact;
+        const newTransact = {
+            concept: concept.toLowerCase(),
+            amount,
+            transaction_date,
+        }
+        return newTransact;
+    }
+
+    try {
+        const insertedTransaction = await updateTransact(req.body);
+        const gTransaction = transactionDao.get(insertedTransaction.id)
         res.status(201).send({ transaction: await gTransaction })
 
     } catch (err) {
